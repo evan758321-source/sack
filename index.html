@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>MARLOW LOVES HACKING!!!!</title>
+<link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Bebas+Neue&display=swap" rel="styleHeet"/>
+<style>
+  :root {
+    --red: #c0392b;
+    --yellow: #f39c12;
+    --paper: #f0e6d3;
+    --dark: #1a1008;
+    --ink: #2c1a0e;
+    --tape: rgba(255, 230, 100, 0.45);
+    --stamp-green: #2e7d32;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background-color: #1a1008;
+    background-image:
+      radial-gradient(ellipse at 20% 50%, rgba(100,40,0,0.3) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 20%, rgba(80,20,0,0.2) 0%, transparent 50%),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4'%3E%3Crect width='4' height='4' fill='%231a1008'/%3E%3Ccircle cx='1' cy='1' r='0.5' fill='%23ffffff08'/%3E%3C/svg%3E");
+    font-family: 'Courier Prime', monospace;
+    color: var(--ink);
+    min-height: 100vh;
+    padding: 40px 20px 80px;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    text-align: center;
+    margin-bottom: 50px;
+    position: relative;
+  }
+  .header .classified-banner {
+    display: inline-block;
+    background: var(--red);
+    color: white;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1rem;
+    letter-spacing: 0.4em;
+    padding: 4px 24px;
+    margin-bottom: 12px;
+    transform: rotate(-0.5deg);
+  }
+  .header h1 {
+    font-family: 'Special Elite', cursive;
+    font-size: clamp(2.2rem, 6vw, 4.5rem);
+    color: var(--paper);
+    text-shadow: 3px 3px 0 rgba(0,0,0,0.6);
+    line-height: 1;
+    letter-spacing: 0.02em;
+  }
+  .header h1 span { color: var(--red); }
+  .header .subtitle {
+    color: #b0967a;
+    font-size: 0.9rem;
+    letter-spacing: 0.15em;
+    margin-top: 10px;
+    font-style: italic;
+  }
+  .header .disclaimer-flag {
+    display: inline-block;
+    background: var(--yellow);
+    color: #3d2600;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 0.85rem;
+    letter-spacing: 0.2em;
+    padding: 3px 14px;
+    margin-top: 14px;
+    transform: rotate(0.4deg);
+  }
+
+  /* ── CORKBOARD WRAPPER ── */
+  .board {
+    max-width: 960px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+
+  /* ── PAPER CARD ── */
+  .card {
+    background: var(--paper);
+    padding: 28px 32px;
+    position: relative;
+    box-shadow: 4px 6px 20px rgba(0,0,0,0.6), inset 0 0 60px rgba(0,0,0,0.04);
+    border: 1px solid #d5c4a8;
+  }
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    opacity: 0.5;
+  }
+  .card.rotated-left  { transform: rotate(-0.8deg); }
+  .card.rotated-right { transform: rotate(0.7deg); }
+  .card.rotated-tiny  { transform: rotate(-0.3deg); }
+
+  /* Tape strip decorations */
+  .tape-top {
+    position: absolute;
+    top: -14px;
+    left: 50%;
+    transform: translateX(-50%) rotate(-1deg);
+    width: 80px;
+    height: 28px;
+    background: var(--tape);
+    border: 1px solid rgba(200,180,80,0.3);
+    backdrop-filter: blur(1px);
+  }
+  .tape-topleft {
+    position: absolute;
+    top: -10px; left: 20px;
+    width: 60px; height: 24px;
+    background: var(--tape);
+    transform: rotate(-3deg);
+    border: 1px solid rgba(200,180,80,0.3);
+  }
+  .tape-topright {
+    position: absolute;
+    top: -10px; right: 20px;
+    width: 60px; height: 24px;
+    background: var(--tape);
+    transform: rotate(2deg);
+    border: 1px solid rgba(200,180,80,0.3);
+  }
+
+  /* Push-pin */
+  .pin {
+    position: absolute;
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #ff6b6b, #8b0000);
+    box-shadow: 1px 1px 4px rgba(0,0,0,0.5);
+    top: -8px; left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+  }
+  .pin.pin-red { background: radial-gradient(circle at 35% 35%, #ff6b6b, #8b0000); }
+  .pin.pin-blue { background: radial-gradient(circle at 35% 35%, #6bb5ff, #003a8b); }
+  .pin.pin-yellow { background: radial-gradient(circle at 35% 35%, #ffe96b, #8b7000); }
+  .pin.pin-green { background: radial-gradient(circle at 35% 35%, #6bff8a, #007a1a); }
+
+  .card-label {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.3em;
+    color: var(--red);
+    margin-bottom: 8px;
+  }
+  .card h2 {
+    font-family: 'Special Elite', cursive;
+    font-size: 1.5rem;
+    color: var(--ink);
+    margin-bottom: 16px;
+    border-bottom: 2px solid #c8b090;
+    padding-bottom: 8px;
+  }
+  .card p { 
+    line-height: 1.75; 
+    font-size: 0.93rem; 
+    margin-bottom: 10px;
+    color: #3a2010;
+  }
+  .card p:last-child { margin-bottom: 0; }
+
+  /* ── DISCLAIMER CARD ── */
+  .disclaimer-card {
+    background: #fff9e6;
+    border: 2px daHed #d4a030;
+    padding: 20px 28px;
+    position: relative;
+    border-radius: 2px;
+  }
+  .disclaimer-card .disclaimer-stamp {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.4rem;
+    color: var(--yellow);
+    letter-spacing: 0.2em;
+    opacity: 0.7;
+    transform: rotate(-2deg);
+    display: inline-block;
+    margin-bottom: 6px;
+    border: 3px solid var(--yellow);
+    padding: 2px 10px;
+  }
+
+  /* ── EVIDENCE SECTION ── */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  @media (max-width: 640px) { .two-col { grid-template-columns: 1fr; } }
+
+  .evidence-item {
+    background: #ede0c4;
+    border-left: 4px solid var(--red);
+    padding: 12px 16px;
+    margin-bottom: 12px;
+    position: relative;
+  }
+  .evidence-item::before {
+    content: '▶';
+    color: var(--red);
+    margin-right: 8px;
+    font-size: 0.7rem;
+  }
+  .evidence-item a {
+    color: #7a1a00;
+    text-decoration: underline dotted;
+    font-weight: 700;
+    font-size: 0.88rem;
+    word-break: break-all;
+  }
+  .evidence-item a:hover { color: var(--red); }
+  .evidence-item .ev-label {
+    font-size: 0.75rem;
+    color: #8a6040;
+    display: block;
+    margin-top: 4px;
+    font-style: italic;
+  }
+
+  /* ── OBSERVATIONS ── */
+  .obs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 14px;
+    margin-top: 12px;
+  }
+  .obs-card {
+    background: #e8d8b8;
+    border: 1px solid #c4a870;
+    padding: 14px;
+    position: relative;
+    font-size: 0.85rem;
+    line-height: 1.5;
+  }
+  .obs-card .obs-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem;
+    color: rgba(192,57,43,0.15);
+    position: absolute;
+    bottom: 4px; right: 10px;
+    line-height: 1;
+  }
+  .obs-card strong {
+    display: block;
+    font-family: 'Special Elite', cursive;
+    font-size: 0.95rem;
+    color: #6a1000;
+    margin-bottom: 4px;
+  }
+
+  /* ── SUS METER ── */
+  .sus-list {
+    list-style: none;
+    margin-top: 10px;
+  }
+  .sus-list li {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 18px;
+    font-size: 0.9rem;
+    line-height: 1.4;
+  }
+  .sus-list li .sus-icon {
+    font-size: 1.4rem;
+    flex-shrink: 0;
+    width: 32px;
+    text-align: center;
+  }
+  .sus-level {
+    display: inline-block;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    padding: 1px 6px;
+    border-radius: 2px;
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+  .sus-level.high { background: #c0392b; color: white; }
+  .sus-level.mid  { background: #e67e22; color: white; }
+  .sus-level.low  { background: #27ae60; color: white; }
+
+  /* ── THE REAL QUESTION ── */
+  .verdict-card {
+    background: #1a0a0a;
+    border: 2px solid var(--red);
+    padding: 30px 36px;
+    position: relative;
+    overflow: hidden;
+  }
+  .verdict-card::after {
+    content: '?';
+    position: absolute;
+    right: -10px; bottom: -30px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18rem;
+    color: rgba(192,57,43,0.06);
+    line-height: 1;
+    pointer-events: none;
+  }
+  .verdict-card h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem;
+    letter-spacing: 0.1em;
+    color: var(--paper);
+    margin-bottom: 16px;
+  }
+  .verdict-card p {
+    color: #c8a882;
+    line-height: 1.8;
+    font-size: 0.92rem;
+    max-width: 680px;
+  }
+  .verdict-card .highlight {
+    color: var(--yellow);
+    font-weight: 700;
+  }
+
+  /* ── POLL ── */
+  .poll-area { margin-top: 28px; }
+  .poll-area h3 {
+    font-family: 'Special Elite', cursive;
+    font-size: 1.1rem;
+    color: var(--paper);
+    margin-bottom: 16px;
+    border-bottom: 1px solid #5a2010;
+    padding-bottom: 6px;
+  }
+  .poll-options { display: flex; flex-direction: column; gap: 10px; }
+  .poll-btn {
+    background: transparent;
+    border: 1px solid #5a2010;
+    color: #d0b090;
+    padding: 12px 20px;
+    font-family: 'Courier Prime', monospace;
+    font-size: 0.88rem;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .poll-btn:hover { border-color: var(--red); color: var(--paper); background: rgba(192,57,43,0.1); }
+  .poll-btn.voted { border-color: var(--yellow); color: var(--yellow); pointer-events: none; }
+  .poll-bar {
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    background: rgba(192,57,43,0.15);
+    transition: width 0.6s ease;
+    width: 0%;
+  }
+  .poll-btn-text { position: relative; z-index: 1; }
+  .poll-pct {
+    position: absolute; right: 14px; top: 50%;
+    transform: translateY(-50%);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 0.9rem;
+    color: var(--yellow);
+    z-index: 1;
+    display: none;
+  }
+  #poll-total { color: #6a4a30; font-size: 0.75rem; margin-top: 8px; }
+
+  /* ── RED STRING DIVIDER ── */
+  .string-div {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin: 8px 0;
+  }
+  .string-div::before,
+  .string-div::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--red), transparent);
+  }
+  .string-div span {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.3em;
+    color: var(--red);
+    white-space: nowrap;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center;
+    color: #5a3a20;
+    font-size: 0.75rem;
+    margin-top: 60px;
+    font-style: italic;
+  }
+  footer a { color: #7a5030; }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeSlide {
+    from { opacity: 0; transform: translateY(20px) rotate(var(--rot, 0deg)); }
+    to   { opacity: 1; transform: translateY(0)   rotate(var(--rot, 0deg)); }
+  }
+  .card, .disclaimer-card, .verdict-card {
+    animation: fadeSlide 0.5s ease both;
+  }
+  .card:nth-child(1) { animation-delay: 0.05s; }
+  .card:nth-child(2) { animation-delay: 0.12s; }
+  .card:nth-child(3) { animation-delay: 0.19s; }
+  .card:nth-child(4) { animation-delay: 0.26s; }
+  .verdict-card      { animation-delay: 0.33s; }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════ HEADER ═══════════════════ -->
+<header class="header">
+  <div class="classified-banner">EVERYTHING HERE IS TRUE INVESTIGATION</div>
+  <h1>THE <span>MARLOW</span> DOSSIER</h1>
+  <p class="subtitle">Hes top level hacker</p>
+  <div class="disclaimer-flag">⚠ ts is all facts btw ⚠</div>
+</header>
+
+<div class="board">
+
+  <!-- ══ DISCLAIMER ══ -->
+  <div class="disclaimer-card" style="animation: fadeSlide 0.4s ease both;">
+    <div class="disclaimer-stamp">⚠ READ FIRST</div>
+    <p style="font-family:'Courier Prime',monospace; font-size:0.9rem; line-height:1.8; color:#5a3a10;">
+      preface: i am <strong>1000%</strong> SURE ABOUT ALL THIS <em>personal opinion</em> HE's a HACKING GODDDD!
+    </p>
+  </div>
+
+  <div class="string-div"><span>EXHIBIT A — VIDEO EVIDENCE</span></div>
+
+  <!-- ══ EVIDENCE LINKS ══ -->
+  <div class="card rotated-left">
+    <div class="tape-topleft"></div>
+    <div class="tape-topright"></div>
+    <div class="card-label">EXHIBIT A</div>
+    <h2>Video Evidence</h2>
+    <p>THESE SHOW FUCKING PROOOOOFFFF!</p>
+
+    <div class="evidence-item">
+      <a href="https://www.youtube.com/watch?v=9wK9CceOvNs" target="_blank" rel="noopener">youtube.com/watch?v=9wK9CceOvNs</a>
+    </div>
+    <div class="evidence-item">
+      <a href="https://www.youtube.com/watch?v=-XU7H1o2nbM" target="_blank" rel="noopener">youtube.com/watch?v=-XU7H1o2nbM</a>
+    </div>
+    <div class="evidence-item">
+      <a href="https://www.youtube.com/watch?v=fd9GAz3lUto" target="_blank" rel="noopener">youtube.com/watch?v=fd9GAz3lUto</a>
+    </div>
+    <div class="evidence-item">
+      <a href="https://www.youtube.com/watch?v=AF_ZqpIYoTQ" target="_blank" rel="noopener">youtube.com/watch?v=AF_ZqpIYoTQ</a>
+    </div>
+    <div class="evidence-item">
+      <a href="https://www.youtube.com/watch?v=eRRydI1VmvI" target="_blank" rel="noopener">youtube.com/watch?v=eRRydI1VmvI</a>
+    </div>
+    <p style="font-size:0.8rem; color:#8a6040; margin-top:8px;"><em>there's way more than this, these are just some of the main ones</em></p>
+  </div>
+
+  <div class="string-div"><span>EXHIBIT B — OBSERVATIONS</span></div>
+
+  <!-- ══ OBSERVATIONS ══ -->
+  <div class="card rotated-right">
+    <div class="pin pin-red"></div>
+    <div class="card-label">EXHIBIT B</div>
+    <h2>Observed Anomalies</h2>
+    <p>these are the specific things people have flagged in clips. some have explanations. the problem is it keeps happening, and that's what gets me.</p>
+    <div class="obs-grid">
+      <div class="obs-card">
+        <strong>Hits While Eating</strong>
+        His landing hits during food animations where you literally can't attack. happens more than once.
+        <span class="obs-num">01</span>
+      </div>
+      <div class="obs-card">
+        <strong>The Sensitivity Thing</strong>
+        2000 dpi at 100% sens. anyone who's played minecraft pvp knows that should make your aim terrible. hers isn't.
+        <span class="obs-num">02</span>
+      </div>
+      <div class="obs-card">
+        <strong>Shield Disables</strong>
+        the way her shields get disabled (and He disables others) doesn't line up with normal axe timing. too clean.
+        <span class="obs-num">03</span>
+      </div>
+      <div class="obs-card">
+        <strong>The Skill Jump</strong>
+        He got way better specifically after the tierlist split. not gradually — pretty sudden.
+        <span class="obs-num">04</span>
+      </div>
+      <div class="obs-card">
+        <strong>It's Not a One-Off</strong>
+        lag spikes happen once. flukes happen once. this stuff keeps showing up which is what makes it hard to just wave off.
+        <span class="obs-num">05</span>
+      </div>
+      <div class="obs-card">
+        <strong>The Mod Excuse</strong>
+        if the mods He says He uses actually caused all this, they'd have to be firing way more consistently than makes sense.
+        <span class="obs-num">06</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="string-div"><span>EXHIBIT C — THE POWER PROBLEM</span></div>
+
+  <!-- ══ SUS POWER STRUCTURE ══ -->
+  <div class="card rotated-tiny">
+    <div class="tape-top"></div>
+    <div class="card-label">EXHIBIT C — THE ACTUAL POINT</div>
+    <h2>It's Not Just the Gameplay</h2>
+    <p>Even if you believe every clip has a legitimate explanation — this part is harder to dismiss. The question isn't only <em>"does He hack?"</em> The answer is: <strong>YEYEYEYEYEYEYSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS</strong></p>
+    <br/>
+    <ul class="sus-list">
+      <li>
+        <span class="sus-icon">🏆</span>
+        <div>
+          <strong>He owns the tierlist</strong><br/>
+          He owns mctiers thats why his annoying ass is still there...
+        </div>
+      </li>
+      <li>
+        <span class="sus-icon">🖥️</span>
+        <div>
+          <strong>ok</strong><br/>
+          He top level hacker okwhjferiuhgfvewrhgvierhbgle
+        </div>
+      </li>
+      <li>
+        <span class="sus-icon">⚙️</span>
+        <div>
+          <strong>transgender</strong><br/>
+          ITS A HE. but wants to be a girl so fucking bad/
+        </div>
+      </li>
+      <li>
+        <span class="sus-icon">📈</span>
+        <div>
+          <strong>HES ACTUALLY DANGER MARIO
+        </div>
+      </li>
+      <li>
+        <span class="sus-icon">💬</span>
+        <div>
+          <strong>and to be clear — he is ass without hacks</strong><br/>
+          isnt this obvious
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <div class="string-div"><span>what does you're low iq brain think</span></div>
+
+  <!-- ══ VERDICT + POLL ══ -->
+  <div class="verdict-card">
+    <h2>So… What Do YOU Think?</h2>
+    <p>
+     He LOOOOOVEEESSS CHEATING!!!<br/><br/>
+      my honest opinion: <span class="highlight">HE (DANGER MARIO) IS A FUCKING HACKER AND A DISGRACE TO SOCIETY</span> HE THINKS HES SOO FUCKING TUFFFFFFFFF BUT HES NOTTTTTTTTTTTTTTT..
+    </p>
+
+    <div class="poll-area">
+      <h3>📊 Community Vote — CLICK ONE ig</h3>
+      <div class="poll-options" id="poll">
+        <button class="poll-btn" onclick="vote(0)">
+          <span class="poll-bar" id="bar0"></span>
+          <span class="poll-btn-text">He's definitely cheating </span>
+          <span class="poll-pct" id="pct0"></span>
+        </button>
+        <button class="poll-btn" onclick="vote(1)">
+          <span class="poll-bar" id="bar1"></span>
+          <span class="poll-btn-text">SUS ASSHOLE</span>
+          <span class="poll-pct" id="pct1"></span>
+        </button>
+        <button class="poll-btn" onclick="vote(2)">
+          <span class="poll-bar" id="bar2"></span>
+          <span class="poll-btn-text">HE WANTS TO SMASH DRDONUT</span>
+          <span class="poll-pct" id="pct2"></span>
+        </button>
+        <button class="poll-btn" onclick="vote(3)">
+          <span class="poll-bar" id="bar3"></span>
+          <span class="poll-btn-text">HE WANTS TO HACK IN 3D MODELS OF CAT DRDONUT</span>
+          <span class="poll-pct" id="pct3"></span>
+        </button>
+      </div>
+      <p id="poll-total"></p>
+    </div>
+  </div>
+
+</div><!-- end .board -->
+
+<footer>
+  <p>I WASTED MONEY ON THIS SHITTY WEBSITE.<br/>
+ HE WANTS TO BE A GIRLLLL SOOO BADD! · <a href="#">hi</a></p>
+</footer>
+
+<script>
+  // Simple in-memory poll — resets on refresh, which is fine for a discussion page
+  const votes = [0, 0, 0, 0];
+
+  function vote(idx) {
+    if (document.querySelector('.poll-btn.voted')) return;
+    votes[idx]++;
+    const total = votes.reduce((a,b)=>a+b,0);
+    const btns = document.querySelectorAll('.poll-btn');
+    btns.forEach((btn, i) => {
+      btn.classList.add('voted');
+      const pct = Math.round((votes[i]/total)*100);
+      document.getElementById('bar'+i).style.width = pct+'%';
+      const pctEl = document.getElementById('pct'+i);
+      pctEl.textContent = pct+'%';
+      pctEl.style.display = 'block';
+    });
+    document.getElementById('poll-total').textContent = `${total} vote${total!==1?'s':''} cast on this page session`;
+  }
+</script>
+</body>
+</html>
